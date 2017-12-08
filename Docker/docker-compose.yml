@@ -1,0 +1,30 @@
+version: '2'
+services:
+  traefik:
+    image: traefik:latest
+    command: --web --docker --docker.comain=docker.localhost --logLevel=DEBUG'
+    ports:
+      - "45680:80"
+      - "45643:443"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /dev/null:/traefik.toml
+    labels:
+      - "traefik.app.rule=Host:app.docker.local"
+      - "traefik.app.port=8080"
+      - "traefik.app.frontend.backend=app"
+      - "traefik.app.frontend.entrypoints=http"
+
+  app:
+    build:
+      context: .
+      dockerfile: frontend.dockerfile
+    volumes:
+      - ../frontend:/app
+
+  database:
+    build:
+      context: .
+      dockerfile: backend.dockerfile
+    volumes:
+      - ../backend:/app

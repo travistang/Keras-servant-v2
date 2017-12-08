@@ -1,0 +1,38 @@
+version: '3.3'
+services:
+  traefik:
+    image: traefik:latest
+    command: --web --docker --docker.domain=keras --logLevel=DEBUG
+    ports:
+      - "80:80"
+      - "443:443"
+      - "48080:8080"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /dev/null:/traefik.toml
+    labels:
+      - "traefik.dashboard.rule=Host:keras;PathPrefix:/app"
+      - "traefik.dashboard.port=9000"
+    #   - "traefik.dashboard.frontend.backend=app"
+    #   - "traefik.dashboard.frontend.entrypoints=http"
+      - "traefik.database.rule=Host:keras;PathPrefix:/db"
+      - "traefik.database.port=5000"
+    #   - "traefik.database.frontend.backend=database"
+    #   - "traefik.database.frontend.entrypoints=http"
+  dashboard:
+    build:
+      context: .
+      dockerfile: ./Docker/frontend.dockerfile
+    # ports:
+    #   - "44444:8080"
+    volumes:
+      - ./frontend:/app
+
+  database:
+    ports:
+      - "5000:5000"
+    build:
+      context: .
+      dockerfile: ./Docker/backend.dockerfile
+    volumes:
+      - ./backend:/app
