@@ -32,7 +32,9 @@
 </template>
 
 <script>
-  export default {}
+  export default {
+    store: this.store
+  }
 </script>
 
 <style lang="scss"></style>

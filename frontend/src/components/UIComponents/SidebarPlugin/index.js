@@ -5,23 +5,23 @@ const SidebarStore = {
   sidebarLinks: [
     {
       name: 'Dashboard',
-      icon: 'ti-panel',
+      icon: 'ti-panel-alt',
       path: '/admin/overview'
     },
     {
       name: 'Tasks',
-      icon: 'ti-list',
-      path: '/tasks'
+      icon: 'ti-menu-alt',
+      path: '/admin/tasks'
     },
     {
       name: 'Models',
-      icon: 'ti-layout-column3',
-      path: '/models'
+      icon: 'ti-layout-column3-alt',
+      path: '/admin/models'
     },
     {
       name: 'Weights',
       icon: 'ti-package',
-      path: '/weights'
+      path: '/admin/weights'
     }
   ],
   displaySidebar (value) {
