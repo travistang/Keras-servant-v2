@@ -13,12 +13,13 @@ services:
     labels:
       - "traefik.dashboard.rule=Host:keras;PathPrefix:/app"
       - "traefik.dashboard.port=9000"
-    #   - "traefik.dashboard.frontend.backend=app"
-    #   - "traefik.dashboard.frontend.entrypoints=http"
-      - "traefik.database.rule=Host:keras;PathPrefix:/db"
-      - "traefik.database.port=5000"
-    #   - "traefik.database.frontend.backend=database"
-    #   - "traefik.database.frontend.entrypoints=http"
+      - "traefik.parse-server.rule=Host:keras;PathPrefix:/parse"
+      - "traefik.parse-server.port=1337"
+  parse-server:
+    extends:
+      file: backend/docker-compose.yml
+      service: parse-server
+      
   dashboard:
     build:
       context: .
@@ -28,11 +29,3 @@ services:
     volumes:
       - ./frontend:/app
 
-  database:
-    ports:
-      - "5000:5000"
-    build:
-      context: .
-      dockerfile: ./Docker/backend.dockerfile
-    volumes:
-      - ./backend:/app

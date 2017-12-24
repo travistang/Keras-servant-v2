@@ -12,7 +12,7 @@
           <th v-for="column in columns">{{column}}</th>
         </thead>
         <tbody>
-          <tr v-for="item in data">
+          <tr v-for="item in data" @click="itemClick(item)">
             <td v-for="column in columns" v-if="hasValue(item, column)">{{itemValue(item, column)}}</td>
           </tr>
         </tbody>
@@ -50,6 +50,9 @@
       },
       itemValue (item, column) {
         return item[column.toLowerCase()]
+      },
+      itemClick(item) {
+        this.$emit('item-click',item)
       }
     }
   }

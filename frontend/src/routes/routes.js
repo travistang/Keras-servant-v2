@@ -4,7 +4,7 @@ import NotFound from '../components/GeneralViews/NotFoundPage.vue'
 import TasksList from '../components/Dashboard/Views/TasksList.vue'
 // Admin pages
 import Overview from 'src/components/Dashboard/Views/Overview.vue'
-
+import TaskView from 'src/components/Dashboard/Views/TaskView.vue'
 const routes = [
   {
     path: '/',
@@ -26,10 +26,15 @@ const routes = [
         name: 'tasks',
         component: TasksList
 
-      }
-    ]
+      },
+      {
+      	path: 'tasks/:id',
+      	name: 'task_details',
+      	component: TaskView,
+      },
+    ],
   },
-  
+
   { path: '*', component: NotFound }
 ]
 

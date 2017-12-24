@@ -43,6 +43,12 @@
     computed: {
       routeName () {
         const {name} = this.$route
+
+        // customize the top nav bar name
+        if (name == 'task_details')
+        {
+          return 'Task Details'
+        }
         return this.capitalizeFirstLetter(name)
       }
     },

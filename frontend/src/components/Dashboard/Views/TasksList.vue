@@ -5,8 +5,8 @@
         title="Task list"
         :data="$store.state.tasks.tasks"
         :columns="$store.state.tasks.taskAttributes"
-
         :sub-title="taskList.length + ' Tasks'"
+        @item-click="(item) => this.itemClicked(item)"
       >
 <!-- :sub-title="$store.state.tasks.tasks.length + 'Tasks'" -->
       </paper-table>
@@ -44,7 +44,16 @@ export default {
         console.log("connect from taskslist")
         this.$socket.send("world")
       }
-  }
+  },
+  methods: {
+    itemClicked: function(item) {
+      let id = item.id
+      let url = `/admin/tasks/${id}`
+      console.log(`Going to ${url}`)
+      this.$router.push({name: 'task_details',params: {"id": id}})
+    }
+  },
+
 }
 </script>
 <style>

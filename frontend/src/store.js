@@ -6,6 +6,7 @@ Vue.use(Vuex)
 const tasks = {
   state: {
     tasks: [{
+      id: 1,
       name: "Example task 1",
       status: "Completed"
     }],
