@@ -1,22 +1,24 @@
 <template>
   <div>
-    <stats-card>
-      <div class="icon-big text-center icon-success" slot="header">
-        <i class="ti-alert"></i>
-      </div>
-      <div class="numbers" slot="content">
-        <p>Loss</p>
-        3.14
-      </div>
-      <div class="stats" slot="footer">
-        <!-- <i class="ti-reload"></i> Updated now -->
-      </div>
-    </stats-card>
+    <div class="col-lg-4">
+      <stats-card
+        icon="ti-alert"
+        iconClass="icon-big text-center icon-danger"
+        name="Loss"
+      />
+    </div>
+    <div class="col-lg-4">
+      <stats-card
+        icon="ti-target"
+        iconClass="icon-big text-center icon-success"
+        name="Accuracy"
+      />
+    </div>
   </div>
 </template>
 
 <script>
-  import StatsCard from '../../UIComponents/Cards/StatsCard'
+  import StatsCard from '../../UIComponents/Tasks/StatsCard'
 export default {
   components: {
     'stats-card': StatsCard,
