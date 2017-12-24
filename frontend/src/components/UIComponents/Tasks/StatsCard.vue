@@ -7,7 +7,7 @@
       </div>
       <div class="numbers" slot="content">
         <p>{{name}}</p>
-        3.14
+        {{value}}
       </div>
       <div class="stats" slot="footer">
         <!-- <i class="ti-reload"></i> Updated now -->
@@ -25,7 +25,7 @@ export default {
   data() {
 
   },
-  props: ["icon","iconClass","name"],
+  props: ["icon","iconClass","name","value"],
 }
 
 </script>

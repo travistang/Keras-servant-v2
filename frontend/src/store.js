@@ -1,8 +1,12 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import VueSocketio from 'vue-socket.io'
-
+import Parse from 'parse'
 Vue.use(Vuex)
+
+Parse.initialize('KERAS_SERVANT','KERAS_SERVANT')
+Parse.serverURL = 'http://localhost:1337/parse'
+
 const tasks = {
   state: {
     tasks: [{
@@ -10,7 +14,8 @@ const tasks = {
       name: "Example task 1",
       status: "Completed"
     }],
-    taskAttributes: ["Name","Status"]
+    taskAttributes: ["Name","Status"],
+
   },
   mutations: {
     add_task(state,task) {
@@ -21,35 +26,29 @@ const tasks = {
     getTaskList: state => state.tasks
   },
   actions: {
-    socket_userMessage(context,message) {
-      context.commit("add_task",{name: "message",status:"message"})
-    }
   },
+}
+const parseStore = {
+  state: {
+    parseServer: Parse,
+    applicationId: "KERAS_SERVANT",
+    masterKey: "KERAS_SERVANT",
+    serverURL: "http://localhost:1337/parse",
+    serverLiveQueryURL: "ws://localhost:1337/parse"
+  }
 }
 const store = new Vuex.Store({
   modules: {
-    tasks: tasks
+    tasks: tasks,
+    parse: parseStore,
   },
   state: {
     connected: false
   },
   mutations: {
-    SOCKET_CONNECT: (state,  status ) => {
-      state.connected = status;
-    },
-    SOCKET_USERMESSAGE: (state, message) => {
-      this.$socket.emit("Hello","from store")
-    }
   },
   actions: {
-    socket_connect(context,status) {
-      context.commit("add_task",{name:"Socket",status: true})
-    },
-    socket_userMessage(context,message) {
-      console.log("socket message:" + message)
-    },
   }
 })
 
 export default store
-Vue.use(VueSocketio,"http://database.kerasservant.keras",store)

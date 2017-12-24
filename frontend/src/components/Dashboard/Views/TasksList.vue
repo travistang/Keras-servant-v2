@@ -27,29 +27,9 @@ export default {
       taskList: 'getTaskList'
     })
   },
-  sockets:
-  {
-      message: function(msg)
-      {
-        console.log("meesage:" + msg)
-        store.commit("add_task",{name:"Message",status: msg})
-        // this.$socket.send('hello')
-      },
-      hello: function(msg)
-      {
-        console.log("server says hello:" + msg)
-        store.commit("add_task", {name: "Hello Message", status: msg})
-      },
-      connect: function() {
-        console.log("connect from taskslist")
-        this.$socket.send("world")
-      }
-  },
   methods: {
     itemClicked: function(item) {
       let id = item.id
-      let url = `/admin/tasks/${id}`
-      console.log(`Going to ${url}`)
       this.$router.push({name: 'task_details',params: {"id": id}})
     }
   },
