@@ -25,7 +25,6 @@ Vue.use(GlobalComponents)
 Vue.use(GlobalDirectives)
 Vue.use(Notifications)
 Vue.use(SideBar)
-
 // configure router
 const router = new VueRouter({
   routes, // short for routes: routes

@@ -2,7 +2,7 @@ version: '2'
 services:
   traefik:
     image: traefik:latest
-    command: --web --docker --docker.comain=docker.localhost --logLevel=DEBUG'
+    command: --web --docker --docker.comain=docker.localhost --logLevel=INFO'
     ports:
       - "45680:80"
       - "45643:443"
