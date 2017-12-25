@@ -22,6 +22,11 @@ export default {
   components: {
     PaperTable
   },
+  data(){
+    return {
+        querySubscription: null,
+    }
+  },
   computed: {
     ...mapGetters({
       taskList: 'getTaskList'
@@ -33,6 +38,26 @@ export default {
       this.$router.push({name: 'task_details',params: {"id": id}})
     }
   },
+
+  created: function() {
+    // get the list of tasks from the database
+    let parse = this.$store.state.parse.parseServer
+    let query = parse.Query("Task")
+    this.querySubscription = query.subscribe()
+    this.querySubscription.on("open",function(){
+      console.log("subscribing task list")
+    })
+    this.querySubscription.on("create",function(task){
+      this.$store.commit("add_task",task)
+    })
+    this.querySubscription.on("update",function(task){
+      this.$store.commit("update_task",task)
+    })
+  },
+
+  beforeDestroy: function() {
+    this.querySubscription.unsubscribe()
+  }
 
 }
 </script>

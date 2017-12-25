@@ -9,17 +9,23 @@ Parse.serverURL = 'http://localhost:1337/parse'
 
 const tasks = {
   state: {
-    tasks: [{
-      id: 1,
-      name: "Example task 1",
-      status: "Completed"
-    }],
-    taskAttributes: ["Name","Status"],
+    tasks: [],
+    taskAttributes: ["Name"],
 
   },
   mutations: {
     add_task(state,task) {
       state.tasks.push(task)
+    },
+    update_task(state,task) {
+      let id = task.objectId
+      if (id == undefined) return
+      for(var i in state.tasks) {
+        let curTask = state.tasks[i]
+        if(curTask.objectId == id) {
+          curTask.name = task.name
+        }
+      }
     }
   },
   getters: {

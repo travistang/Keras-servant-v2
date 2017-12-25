@@ -24,10 +24,14 @@ class KerasServantCallback(Callback):
         pass
     def on_batch_end(self,batch,logs = {}):
         # TODO: submit the result to the database
-        loss = logs.get('loss')
-        if 'loss' not in self.task:
-            self.task['loss'] = []
-        self.task['loss'].append(Decimal(loss.item()))
+        # loss = logs.get('loss')
+        # if 'loss' not in self.task:
+        #     self.task['loss'] = []
+        for attr_name in logs:
+            if attr_name not in self.task:
+                self.task[attr_name] = []
+            val = logs.get(attr_name)
+            self.task['loss'].append(Decimal(loss.item()))
         self.broker.update_task(self.task)
 
 if __name__ == '__main__':
