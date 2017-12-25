@@ -40,13 +40,12 @@ class TaskBroker(DatabaseBroker):
         res = self._post(self.server_url,json.dumps(args)).json()
         res.update(args)
         return res
-    def update_task(self, task, **args):
+    def update_task(self, task):
         if 'objectId' not in task: raise ValueError("objectId must present in the task dict")
         id = task['objectId']
         url = self.server_url + '/' + id
         res = self._put(url,json.dumps(args)).json()
         res.update(task)
-        res.update(args)
         return res
     def create_task_or_get_existing(self, name):
         task = self.get_first_task(name = name)

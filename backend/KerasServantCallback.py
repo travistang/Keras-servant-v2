@@ -19,15 +19,17 @@ class KerasServantCallback(Callback):
                 self.task = self.broker.create_task_or_get_existing(task_name)
 
         print("Checking self.task:",self.task)
-        # TODO: remove me
-        self.task = self.broker.update_task(self.task,loss = 0.4)
-        print("Updated self.task:", self.task)
     def on_train_begin(self,logs = {}):
         # TODO: interact with the database and create an entry
         pass
     def on_batch_end(self,batch,logs = {}):
         # TODO: submit the result to the database
-        pass
+        loss = logs.get('loss')
+        if 'loss' not in self.task:
+            self.task['loss'] = []
+        self.task['loss'].append(loss)
+        self.broker.update_task(self.task)
+        print("recording loss: {}".format(loss))
 
 if __name__ == '__main__':
     # Test here
