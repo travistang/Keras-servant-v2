@@ -1,5 +1,5 @@
 import requests
-import json
+import simplejson as json
 import urllib
 class DatabaseBroker(object):
     def __init__(self,server_url,app_id,app_master_key):
@@ -44,7 +44,12 @@ class TaskBroker(DatabaseBroker):
         if 'objectId' not in task: raise ValueError("objectId must present in the task dict")
         id = task['objectId']
         url = self.server_url + '/' + id
-        res = self._put(url,json.dumps(args)).json()
+        # 'purify' task obj
+        obj = dict(task)
+        del obj['objectId']
+        if 'createdAt' in obj: del obj['createdAt']
+        if 'updatedAt' in obj: del obj['updatedAt']
+        res = self._put(url,json.dumps(obj)).json()
         res.update(task)
         return res
     def create_task_or_get_existing(self, name):

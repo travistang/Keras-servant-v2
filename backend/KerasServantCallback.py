@@ -1,6 +1,6 @@
 from keras.callbacks import Callback
 from brokers import TaskBroker
-
+from decimal import Decimal
 class KerasServantCallback(Callback):
     def __init__(self,parse_server_url,parse_app_id,parse_master_key,object_id = None,**args):
         super(KerasServantCallback,self).__init__() # Python 3
@@ -27,9 +27,8 @@ class KerasServantCallback(Callback):
         loss = logs.get('loss')
         if 'loss' not in self.task:
             self.task['loss'] = []
-        self.task['loss'].append(loss)
+        self.task['loss'].append(Decimal(loss.item()))
         self.broker.update_task(self.task)
-        print("recording loss: {}".format(loss))
 
 if __name__ == '__main__':
     # Test here
