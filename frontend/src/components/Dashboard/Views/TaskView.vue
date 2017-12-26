@@ -1,6 +1,15 @@
 <template>
   <div>
-    <div class="col-lg-6">
+    <div class="col-lg-4">
+      <stats-card
+        icon="ti-bar-chart"
+        iconClass="icon-big text-center icon-success"
+        :objectId="objectId"
+        attrName="epoch"
+        maxAttrName="total_epochs"
+      />
+    </div>
+    <div class="col-lg-4">
       <stats-card
         icon="ti-alert"
         iconClass="icon-big text-center icon-danger"
@@ -8,7 +17,7 @@
         attrName="loss"
       />
     </div>
-    <div class="col-lg-6">
+    <div class="col-lg-4">
       <stats-card
         icon="ti-target"
         iconClass="icon-big text-center icon-success"

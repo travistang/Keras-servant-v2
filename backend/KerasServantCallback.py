@@ -23,17 +23,20 @@ class KerasServantCallback(Callback):
             self.ignore_attrs = args['ignore_attrs']
 
     def on_train_begin(self,logs = {}):
-        # TODO: interact with the database and create an entry
-        pass
+        self.task['status'] = 'Started'
+        self.task['total_epochs'] = self.params['epochs']
+        self.task['epoch'] = 0
+        self.update()
+
+    def on_train_end(self,logs = {}):
+        self.task['status'] = 'Ended'
+        self.update()
+
     def on_batch_end(self,batch,logs = {}):
-        # TODO: submit the result to the database
-        # loss = logs.get('loss')
-        # if 'loss' not in self.task:
-        #     self.task['loss'] = []
         for attr_name in logs:
             # skipping those attributes
             if attr_name in self.ignore_attrs: continue
-            
+
             if attr_name not in self.task:
                 self.task[attr_name] = []
             val = logs.get(attr_name)
@@ -45,8 +48,16 @@ class KerasServantCallback(Callback):
             #elif type(val) in [np.float32,np.float64]:
             else:
                 self.task[attr_name].append(Decimal(val.item()))
-        self.broker.update_task(self.task)
+        self.update()
+    def on_epoch_begin(self, epoch, logs=None):
+        self.task['epoch'] = epoch
+        self.update()
 
+    def on_epoch_end(self, epoch, logs=None):
+        pass
+
+    def update(self):
+        self.broker.update_task(self.task)
 if __name__ == '__main__':
     # Test here
     ksc = KerasServantCallback('http://localhost:1337/parse','KERAS_SERVANT','KERAS_SERVANT',name = 'test_task')
