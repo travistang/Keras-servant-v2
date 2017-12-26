@@ -10,12 +10,18 @@ Parse.serverURL = 'http://localhost:1337/parse'
 const tasks = {
   state: {
     tasks: [],
-    taskAttributes: ["Name"],
+    taskAttributes: ["Name","Created At"],
 
   },
   mutations: {
     add_task(state,task) {
-      state.tasks.push(task)
+      console.log("getting item:" + JSON.stringify(task))
+      let name = task.get('name')
+      let object_id = task.id
+      let created_at = new Date(task.get('createdAt'))
+      let res = {'name': name,'objectId': object_id}
+      res['created at'] = created_at.toDateString()
+      state.tasks.push(res)
     },
     update_task(state,task) {
       let id = task.objectId
@@ -26,6 +32,9 @@ const tasks = {
           curTask.name = task.name
         }
       }
+    },
+    clear_task(state) {
+      state.tasks = []
     }
   },
   getters: {
