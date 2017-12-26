@@ -24,12 +24,12 @@ const tasks = {
       state.tasks.push(res)
     },
     update_task(state,task) {
-      let id = task.objectId
+      let id = task.id
       if (id == undefined) return
       for(var i in state.tasks) {
         let curTask = state.tasks[i]
         if(curTask.objectId == id) {
-          curTask.name = task.name
+          curTask.name = task.get('name')
         }
       }
     },
