@@ -63,11 +63,9 @@ export default {
     this.querySubscription = query.subscribe()
 
     this.querySubscription.on("create",function(task){
-      // store.commit("add_task",task)
       store.commit('add_task',task)
     })
     this.querySubscription.on("update",function(task){
-      // TODO: this
       store.commit("update_task",task)
     })
   },

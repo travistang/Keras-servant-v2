@@ -15,7 +15,6 @@ const tasks = {
   },
   mutations: {
     add_task(state,task) {
-      console.log("getting item:" + JSON.stringify(task))
       let name = task.get('name')
       let object_id = task.id
       let created_at = new Date(task.get('createdAt'))

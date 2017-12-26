@@ -18,7 +18,10 @@ class KerasServantCallback(Callback):
                 task_name = args['name']
                 self.task = self.broker.create_task_or_get_existing(task_name)
 
-        print("Checking self.task:",self.task)
+        self.ignore_attrs = []
+        if 'ignore_attrs' in args:
+            self.ignore_attrs = args['ignore_attrs']
+
     def on_train_begin(self,logs = {}):
         # TODO: interact with the database and create an entry
         pass
@@ -28,10 +31,20 @@ class KerasServantCallback(Callback):
         # if 'loss' not in self.task:
         #     self.task['loss'] = []
         for attr_name in logs:
+            # skipping those attributes
+            if attr_name in self.ignore_attrs: continue
+            
             if attr_name not in self.task:
                 self.task[attr_name] = []
             val = logs.get(attr_name)
-            self.task['loss'].append(Decimal(loss.item()))
+            # TODO: what about non-scaler logs?
+            if type(val) == int:
+                self.task[attr_name].append(val)
+            elif type(val) == float:
+                self.task[attr_name].append(Decimal(val))
+            #elif type(val) in [np.float32,np.float64]:
+            else:
+                self.task[attr_name].append(Decimal(val.item()))
         self.broker.update_task(self.task)
 
 if __name__ == '__main__':
