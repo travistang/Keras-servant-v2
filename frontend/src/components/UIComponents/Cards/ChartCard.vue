@@ -55,6 +55,10 @@ import store from '../../../store'
           }
         }
       },
+      updateInterval: {
+        type: Number,
+        default: () => {return 2000}
+      },
       colors: {
         type: Array,
       }
@@ -64,7 +68,7 @@ import store from '../../../store'
         chartId: 'no-id',
         chart: null,
         timer: null,
-        updateInterval: 2000,
+
       }
     },
     methods: {

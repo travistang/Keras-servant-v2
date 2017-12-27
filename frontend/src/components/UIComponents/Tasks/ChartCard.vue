@@ -5,6 +5,7 @@
       :chartOption="chartOption"
       :chartId="chartId"
       :colors="colors"
+      :updateInterval="updateInterval"
     >
       <span slot="title">Graph</span>
       <!-- <span slot="subTitle"> 24 Hours performance</span> -->
@@ -13,6 +14,9 @@
           <i :style="getLegendStyle(ind - 1)" class="fa fa-circle" />
           {{monitoredAttrs[ind - 1]}}
         </div>
+      </div>
+      <div slot="footer">
+        Updated every {{updateInterval | toSec}} secs
       </div>
     </chart-card>
   </div>
@@ -26,7 +30,7 @@ export default {
   components: {
     ChartCard,
   },
-  props: ["attrNames","objectId","chartId"],
+  props: ["attrNames","objectId","chartId","updateInterval"],
   data() {
     return {
       colors: this.prepareColors(),
@@ -51,6 +55,12 @@ export default {
 
       query: null,
       subscription: null,
+    }
+  },
+  filters: {
+    toSec: function(v){
+      if (typeof v === 'number') return v / 1000
+      return v
     }
   },
   computed: {
