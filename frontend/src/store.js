@@ -32,6 +32,17 @@ const tasks = {
         }
       }
     },
+    delete_task(state,task) {
+      let id = task.id
+      let res = []
+      for(var i in state.task) {
+        let curTask = state.tasks[i]
+        if(curTask.objectId != id) {
+          res.push(curTask)
+        }
+      }
+      state.tasks = res
+    },
     clear_task(state) {
       state.tasks = []
     }

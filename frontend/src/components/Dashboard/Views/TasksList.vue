@@ -68,6 +68,9 @@ export default {
     this.querySubscription.on("update",function(task){
       store.commit("update_task",task)
     })
+    this.querySubscription.on("delete",function(task){
+      store.commit("delete_task",task)
+    })
   },
 
   beforeDestroy: function() {
