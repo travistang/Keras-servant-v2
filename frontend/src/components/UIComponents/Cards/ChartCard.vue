@@ -24,6 +24,7 @@
   </div>
 </template>
 <script>
+import store from '../../../store'
   export default {
     name: 'chart-card',
     props: {
@@ -53,11 +54,17 @@
             series: []
           }
         }
+      },
+      colors: {
+        type: Array,
       }
     },
     data () {
       return {
-        chartId: 'no-id'
+        chartId: 'no-id',
+        chart: null,
+        timer: null,
+        updateInterval: 2000,
       }
     },
     methods: {
@@ -66,7 +73,10 @@
        */
       initChart () {
         var chartIdQuery = `#${this.chartId}`
-        this.$Chartist[this.chartType](chartIdQuery, this.chartData, this.chartOptions)
+        this.chart = this.$Chartist[this.chartType](chartIdQuery, this.chartData, this.chartOptions)
+        this.timer = setInterval(() => {
+          this.chart.update()
+        },this.updateInterval)
       },
       /***
        * Assigns a random id to the chart
@@ -78,11 +88,22 @@
       },
       getRandomInt (min, max) {
         return Math.floor(Math.random() * (max - min + 1)) + min
+      },
+    },
+    watch: {
+      'chart': function() {
+        if (this.chart != null && this.timer == null) {
+          console.log("setting timer")
+          // this.timer = setInterval(() => {
+          //   this.chart.update(this.chartData)
+          // },this.updateInterval)
+        }
       }
     },
     mounted () {
       this.updateChartId()
       this.$nextTick(this.initChart)
+      // trigger update on interval
     }
   }
 
