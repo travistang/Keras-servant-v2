@@ -30,10 +30,18 @@
 
     <!-- 2nd row-->
     <div class="row">
-      <div class="col-lg-12">
+      <div class="col-lg-6">
         <chart-card
           :objectId="objectId"
-          attrNames="loss,acc"
+          :updateInterval="updateInterval"
+          attrNames="loss"
+        />
+      </div>
+      <div class="col-lg-6">
+        <chart-card
+          :objectId="objectId"
+          :updateInterval="updateInterval"
+          attrNames="acc"
         />
       </div>
     </div>
@@ -52,6 +60,7 @@ export default {
   data(){
     return {
       objectId: this.$route.params.id,
+      updateInterval: 2000,
     }
   },
 
