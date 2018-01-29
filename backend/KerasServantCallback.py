@@ -2,7 +2,16 @@ from keras.callbacks import Callback
 from brokers import TaskBroker
 from decimal import Decimal
 class KerasServantCallback(Callback):
-    def __init__(self,parse_server_url,parse_app_id,parse_master_key,object_id = None,**args):
+    def __init__(self,
+            parse_server_url,
+            parse_app_id,
+            parse_master_key,
+            object_id = None, # The id of the object in the database.
+            report_gradients = False,
+            report_activations = False,
+            loss_func_builder = None,
+            sample_data_generator = None,
+            **args):
         super(KerasServantCallback,self).__init__() # Python 3
 
         # setting up ParsePy
@@ -21,6 +30,31 @@ class KerasServantCallback(Callback):
         self.ignore_attrs = []
         if 'ignore_attrs' in args:
             self.ignore_attrs = args['ignore_attrs']
+        self.report_activations = report_activations
+        self.report_gradients = report_gradients
+       
+        if self.report_activations:
+            if not sample_data_generator: raise ValueError("If report_activations is set to True, 'sample_data_generator' must be provided")
+            self.sample_data_generator = sample_data_generator
+        
+        # create some placeholders and build the loss function for the gradient functions
+        if self.report_gradients:
+            if not loss_func_builder: raise ValueError("If report_gradients is set to True, 'loss_func_builder' must be provided")
+            if not sample_data_generator: raise ValueError("If report_gradients is set to True, 'sample_data_generator' must be provided")
+            self.loss_func_builder = loss_func
+            self.sample_data_generator = sample_data_generator
+            
+    def set_model(self,model):
+        self.model = model
+        if self.report_activations:
+            layer_outputs = [l.output for l in self.model.layers]
+            self.activation_funcs = K.function(self.model.inputs,layer_outputs]
+        if self.report_gradients:
+            # create a list of placeholders
+            self.target_phs = [K.placeholder(output.shape) for output in self.model.outputs]
+            self.loss_func = self.loss_func_builder(self.model.outputs,self.target_phs)
+            grad_ops = K.gradient(self.loss_func,self.model.trainable_weights)
+            self.grad_log_function = K.function(self.model.inputs + self.target_phs,grad_ops)
 
     def on_train_begin(self,logs = {}):
         self.task['status'] = 'Started'
@@ -54,7 +88,24 @@ class KerasServantCallback(Callback):
         self.update()
 
     def on_epoch_end(self, epoch, logs=None):
-        pass
+        if hasattr(self,'sample_data_generator'):
+            data = sel.sample_data_generator.__next__()
+            if len(data) == 2:
+                X,y = data
+            elif len(data) == 3:
+                X,y,mask = data
+            else:
+                raise ValueError("The given data sample generator must have either 2 or 3 inputs")
+        # then prepare the X,y for feeding into the functions
+        X = [X]
+
+        else:
+            return # or do you need to log something at the end of the epoch?
+        if self.report_activations:
+            # gather activation information
+            layer_outputs = self.activation_funcs(X) 
+        if self.report_gradients:
+            pass
 
     def update(self):
         self.broker.update_task(self.task)
